@@ -1,0 +1,21 @@
+from PyQt5.QtWidgets import QApplication,QWidget,QLabel
+import sys
+from PyQt5.QtGui import QPixmap
+
+app = QApplication(sys.argv)
+
+
+w = QWidget()
+
+
+label = QLabel(w)
+label.setText('第一个文本')
+
+img = QPixmap(r'C:\Users\35382\Desktop\code\pyqt5的学习\img.png')
+label.setPixmap(img)
+label.resize(img.width(),img.height())
+
+
+w.show()
+
+sys.exit(app.exec_())

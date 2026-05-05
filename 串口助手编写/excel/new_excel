@@ -1,0 +1,66 @@
+# import time
+
+# green = '\033[32m'
+# reset = '\033[0m'
+
+# for i in range(50):
+#     percent = (i+1)/50
+#     bar = '■'*i
+#     process = '-'*(50-i)
+#     # print(f'\r[{green}{bar + process}{reset}]进度:{percent*100:.1f}%',end = '',flush = True)
+#     print('\r[{}{}{}]进度:{:.1f}%'.format(green,bar+process,reset,percent*100),end = '',flush = True)
+
+#     time.sleep(1)
+
+
+import threading
+import time
+
+# 模拟任务函数
+def calibration():
+    print("[校准] 开始信号源校准...")
+    time.sleep(10)  # 模拟10秒校准
+    print("[校准] 校准完成！")
+
+def read_data():
+    print("[读数据] 初始化频谱仪...")
+    time.sleep(2)   # 模拟2秒读数据
+    print("[读数据] 数据读取完成！")
+
+# 串行执行
+def serial_execution():
+    start = time.time()
+    calibration()  # 先校准
+    read_data()     # 再读数据
+    return time.time() - start
+
+# 并行执行
+def parallel_execution():
+    start = time.time()
+    
+    # 创建线程
+    t1 = threading.Thread(target=calibration)
+    t2 = threading.Thread(target=read_data)
+    
+    # 启动线程
+    t1.start()
+    t2.start()
+    
+    # 等待所有线程完成
+    t1.join()
+    t2.join()
+    
+    return time.time() - start
+
+if __name__ == "__main__":
+    # 测试串行
+    serial_time = serial_execution()
+    print(f"\n⏱️ 串行总时间: {serial_time:.2f}秒\n")
+    
+    # 测试并行
+    parallel_time = parallel_execution()
+    print(f"\n⏱️ 并行总时间: {parallel_time:.2f}秒\n")
+    
+    # 计算优化效果
+    improvement = (serial_time - parallel_time) / serial_time * 100
+    print(f"🚀 优化效果: 缩短 {improvement:.1f}%")
